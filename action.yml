@@ -11,8 +11,10 @@ inputs:
     description: 'The full filePath of the file to upload'
     required: true
 outputs:
-  blossom-hash:
+  blossomHash:
     description: 'The hash of the file on blossom'
+  blossomUrl:
+    description: 'The full URL of the blossom blob (file)'
 runs:
   using: 'node20'
   main: 'dist/index.js'
