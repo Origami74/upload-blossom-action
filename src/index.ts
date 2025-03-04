@@ -1,4 +1,4 @@
-import {getInput, setFailed, setOutput} from "@actions/core"
+import {getInput, getMultilineInput, setFailed, setOutput} from "@actions/core"
 import {readFileSync} from 'fs';
 import {NDKPrivateKeySigner, NostrEvent} from "@nostr-dev-kit/ndk";
 import {BlossomClient, EventTemplate, SignedEvent} from "blossom-client-sdk";
@@ -33,24 +33,24 @@ async function upload(filePath: string, host: string): Promise<void> {
 try {
     // Fetch the value of the input 'who-to-greet' specified in action.yml
     const host = getInput('host');
-    const filePath = getInput('filePath');
+    const filePaths = getMultilineInput('filePaths');
 
-    console.log(`Uploading file '${filePath}' to host: '${host}'!`);
+    filePaths.forEach(filePath => {
+        console.log(`Uploading file '${filePath}' to host: '${host}'!`);
+        upload(filePath, host)
+            .then(blossomHash => {
+                setOutput("blossom-hash", blossomHash);
+            })
+            .catch((error) => {
+                console.error("Blossom Upload failed with error", error);
 
-    upload(filePath, host)
-        .then(blossomHash => {
-            setOutput("blossom-hash", blossomHash);
-        })
-        .catch((error) => {
-            console.error("Blossom Upload failed with error", error);
-
-            if(error instanceof Error) {
-                setFailed(error.message);
-            } else{
-                setFailed("unexpected error");
-            }
-        })
-
+                if(error instanceof Error) {
+                    setFailed(error.message);
+                } else{
+                    setFailed("unexpected error");
+                }
+            })
+    })
 } catch (error) {
     console.error("Blossom Upload failed with error", error);
 
