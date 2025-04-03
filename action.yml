@@ -11,7 +11,7 @@ inputs:
     description: 'The full filePath of the file to upload'
     required: true
   privatekey:
-    description: 'The private key to use for the upload, if not provided, a new one will be generated'
+    description: 'The hex private key to use for the upload, if not provided, a new one will be generated'
     required: false
 outputs:
   hash:

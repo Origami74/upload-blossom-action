@@ -13,7 +13,12 @@ async function upload(privateKey: string, filePath: string, host: string): Promi
     const blob = new Blob([data], {type: fileType?.toString()});
 
     async function signer(event: EventTemplate): Promise<SignedEvent> {
-        const signer = new NDKPrivateKeySigner(privateKey);
+        let signer;
+        if(privateKey){
+            signer = new NDKPrivateKeySigner(privateKey);
+        } else {
+            signer = NDKPrivateKeySigner.generate();
+        }
         const pubkey = await signer.user().then(u => u.pubkey)
 
         const signature =  await signer.sign(event as NostrEvent);
@@ -35,7 +40,7 @@ try {
     // Fetch the value of the input 'who-to-greet' specified in action.yml
     const host = getInput('host');
     const filePath = getInput('filePath');
-    const privatekey = getInput('privatekey') ?? (NDKPrivateKeySigner.generate()).privateKey;
+    const privatekey = getInput('privatekey');
 
     console.log(`Uploading file '${filePath}' to host: '${host}'!`);
 

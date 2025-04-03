@@ -54148,7 +54148,13 @@ async function upload(privateKey, filePath, host) {
     const fileType = dist_src.getType(filePath);
     const blob = new Blob([data], { type: fileType?.toString() });
     async function signer(event) {
-        const signer = new NDKPrivateKeySigner(privateKey);
+        let signer;
+        if (privateKey) {
+            signer = new NDKPrivateKeySigner(privateKey);
+        }
+        else {
+            signer = NDKPrivateKeySigner.generate();
+        }
         const pubkey = await signer.user().then(u => u.pubkey);
         const signature = await signer.sign(event);
         const y = event;
@@ -54164,7 +54170,7 @@ try {
     // Fetch the value of the input 'who-to-greet' specified in action.yml
     const host = (0,core.getInput)('host');
     const filePath = (0,core.getInput)('filePath');
-    const privatekey = (0,core.getInput)('privatekey') ?? (NDKPrivateKeySigner.generate()).privateKey;
+    const privatekey = (0,core.getInput)('privatekey');
     console.log(`Uploading file '${filePath}' to host: '${host}'!`);
     upload(privatekey, filePath, host)
         .then(blossomHash => {
