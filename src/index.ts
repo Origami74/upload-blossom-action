@@ -35,7 +35,7 @@ try {
     // Fetch the value of the input 'who-to-greet' specified in action.yml
     const host = getInput('host');
     const filePath = getInput('filePath');
-    const privatekey = getInput('privatekey') ?? new NDKPrivateKeySigner().privateKey;
+    const privatekey = getInput('privatekey') ?? (NDKPrivateKeySigner.generate()).privateKey;
 
     console.log(`Uploading file '${filePath}' to host: '${host}'!`);
 

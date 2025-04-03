@@ -54164,7 +54164,7 @@ try {
     // Fetch the value of the input 'who-to-greet' specified in action.yml
     const host = (0,core.getInput)('host');
     const filePath = (0,core.getInput)('filePath');
-    const privatekey = (0,core.getInput)('privatekey') ?? new NDKPrivateKeySigner().privateKey;
+    const privatekey = (0,core.getInput)('privatekey') ?? (NDKPrivateKeySigner.generate()).privateKey;
     console.log(`Uploading file '${filePath}' to host: '${host}'!`);
     upload(privatekey, filePath, host)
         .then(blossomHash => {
