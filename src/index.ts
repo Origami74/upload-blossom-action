@@ -33,6 +33,7 @@ async function upload(privateKey: string, filePath: string, host: string): Promi
     const result = await client.uploadBlob(blob, {auth: uploadAuthEvent})
 
     setOutput("url", result.url);
+    setOutput("hash", result.sha256);
     console.log(`Blob uploaded!, ${result.url}`);
 }
 
@@ -44,19 +45,7 @@ try {
 
     console.log(`Uploading file '${filePath}' to host: '${host}'!`);
 
-    upload(privatekey, filePath, host)
-        .then(blossomHash => {
-            setOutput("hash", blossomHash);
-        })
-        .catch((error) => {
-            console.error("Blossom Upload failed with error", error);
-
-            if(error instanceof Error) {
-                setFailed(error.message);
-            } else{
-                setFailed("unexpected error");
-            }
-        })
+    await upload(privatekey, filePath, host)
 
 } catch (error) {
     console.error("Blossom Upload failed with error", error);
