@@ -5,14 +5,19 @@ branding:
   icon: upload
 inputs:
   host:
-    description: 'The host to upload to'
+    description: 'The blossom host to upload to'
     required: true
   filePath:
     description: 'The full filePath of the file to upload'
     required: true
+  privatekey:
+    description: 'The hex private key to use for the upload, if not provided, a new one will be generated'
+    required: false
 outputs:
-  blossom-hash:
+  hash:
     description: 'The hash of the file on blossom'
+  url:
+    description: 'The url of the file on blossom'
 runs:
   using: 'node20'
   main: 'dist/index.js'
