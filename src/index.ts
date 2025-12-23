@@ -5,10 +5,17 @@ import {BlossomClient, EventTemplate, SignedEvent} from "blossom-client-sdk";
 import mime from "mime";
 
 console.log('Starting blossom Upload');
-// Add at the top of the file
+
+// File polyfill to allow runs in NodeJS
 if (typeof File === 'undefined') {
   const { File } = require('formdata-node');
   global.File = File;
+}
+
+// Crypto polyfill to allow runs in NodeJS
+if (typeof crypto === 'undefined' || !crypto.subtle) {
+  const { Crypto } = require('@peculiar/webcrypto');
+  global.crypto = new Crypto();
 }
 
 async function upload(filePath: string, host: string): Promise<void> {
